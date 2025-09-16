@@ -136,7 +136,7 @@ public:
 
         } else {
             auto list = new tsl::elm::List();
-            std::string head = "部分: " + this->m_section;
+            std::string head = "条目: " + this->m_section;
 
             if(m_section.length() > 0) list->addItem(new tsl::elm::CategoryHeader(head));
             else list->addItem(new tsl::elm::CategoryHeader("可用金手指"));
