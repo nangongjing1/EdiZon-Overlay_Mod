@@ -114,7 +114,7 @@ public:
 
         rootFrame->setHeader(new tsl::elm::CustomDrawer([this](tsl::gfx::Renderer *renderer, s32 x, s32 y, s32 w, s32 h) {
             renderer->drawString("EdiZon", false, 20, 50+2, 32, (tsl::defaultOverlayColor));
-            renderer->drawString("金手指", false, 20, 52+23, 15, (tsl::bannerVersionTextColor));
+            renderer->drawString("南宫镜 汉化", false, 20, 52+23, 15, (tsl::bannerVersionTextColor));
 
             if (edz::cheat::CheatManager::getProcessID() != 0) {
                 renderer->drawString("游戏ID:", false, 150 +14, 40 -6, 15, (tsl::style::color::ColorText));
@@ -129,7 +129,7 @@ public:
         if (edz::cheat::CheatManager::getCheats().size() == 0) {
             auto warning = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, u16 x, u16 y, u16 w, u16 h){
                 renderer->drawString("\uE150", false, 180, 274, 90, (0xFFFF));
-                renderer->drawString("未加载金手指", false, 110, 360, 25, (0xFFFF));
+                renderer->drawString("未加载金手指", false, 150, 360, 25, (0xFFFF));
             });
 
             rootFrame->setContent(warning);
@@ -215,7 +215,7 @@ public:
             if(this->m_numCheats < 1){
                 auto warning = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, u16 x, u16 y, u16 w, u16 h){
                     renderer->drawString("\uE150", false, 180, 250, 90, (0xFFFF));
-                    renderer->drawString("子菜单没有金手指", false, 110, 340, 25, (0xFFFF));
+                    renderer->drawString("子菜单没有金手指", false, 130, 340, 25, (0xFFFF));
                 });
 
                 rootFrame->setContent(warning);
