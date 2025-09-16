@@ -415,7 +415,7 @@ public:
     }
 
     std::unique_ptr<tsl::Gui> loadInitialGui() override {
-        return initially<GuiMain>();
+        return initially<GuiCheats>();
     }
 
     
