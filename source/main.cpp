@@ -129,7 +129,12 @@ public:
         if (edz::cheat::CheatManager::getCheats().size() == 0) {
             auto warning = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, u16 x, u16 y, u16 w, u16 h){
                 renderer->drawString("\uE150", false, 180, 274, 90, (0xFFFF));
-                renderer->drawString("未加载金手指", false, 150, 360, 25, (0xFFFF));
+                // 查找其他txt
+                if (edz::cheat::CheatManager::hasCheatFilesInFolder()) {
+                    renderer->drawString("检测到版本不匹配的金手指", false, 75, 360, 25, (0xFFFF));
+                } else {
+                    renderer->drawString("未检测到金手指文件!", false, 108, 360, 25, (0xFFFF));
+                }
             });
 
             rootFrame->setContent(warning);
@@ -215,7 +220,7 @@ public:
             if(this->m_numCheats < 1){
                 auto warning = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, u16 x, u16 y, u16 w, u16 h){
                     renderer->drawString("\uE150", false, 180, 250, 90, (0xFFFF));
-                    renderer->drawString("子菜单没有金手指", false, 130, 340, 25, (0xFFFF));
+                    renderer->drawString("条目中没有金手指", false, 130, 340, 25, (0xFFFF));
                 });
 
                 rootFrame->setContent(warning);

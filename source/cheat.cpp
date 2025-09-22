@@ -18,8 +18,12 @@
  */
 
 #include "cheat.hpp"
-
 #include <cstring>
+#include <strings.h>
+
+// libultrahand头文件
+#include <ultra.hpp>
+
 
 namespace edz::cheat {
 
@@ -296,6 +300,32 @@ namespace edz::cheat {
         return CheatManager::s_frozenAddresses;
     }
 
+    // BadFish-HSrui
+    bool CheatManager::hasCheatFilesInFolder() {
+        // 获取当前Title ID并构建cheats文件夹路径
+        u64 titleID = CheatManager::getTitleID();
+        if (titleID == 0) return false;
+        
+        char cheatsFolderPath[256];
+        snprintf(cheatsFolderPath, sizeof(cheatsFolderPath), "sdmc:/atmosphere/contents/%016lX/cheats/", titleID);
+        
+        // 金手指文件夹是否存在
+        if (!ult::isDirectory(cheatsFolderPath)) {
+            return false;
+        }
+        
+        // 获取所有文件
+        std::vector<std::string> files = ult::getFilesListFromDirectory(cheatsFolderPath);
+        
+        // 检查.txt
+        for (const std::string& file : files) {
+            if (file.length() >= 4 && strcasecmp(file.substr(file.length() - 4).c_str(), ".txt") == 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 
     MemoryInfo CheatManager::queryMemory(u64 address) {
         if (!CheatManager::isCheatServiceAvailable())

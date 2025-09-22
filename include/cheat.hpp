@@ -94,9 +94,11 @@ namespace edz::cheat {
 
         //static EResultVal<u32> addCheat(DmntCheatDefinition cheatDefinition, bool enabled);
         static Result removeCheat(u32 cheatID);
-
         static std::vector<Cheat*>& getCheats();
         static std::vector<FrozenAddress*>& getFrozenAddresses();
+
+        //声明检测函数
+        static bool hasCheatFilesInFolder();
 
         static MemoryInfo queryMemory(u64 address);
         static std::vector<MemoryInfo> getMemoryRegions();
