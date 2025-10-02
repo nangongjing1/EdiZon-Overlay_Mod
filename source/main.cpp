@@ -52,7 +52,7 @@ public:
             renderer->drawString(APP_VERSION, false, 20, 52+23, 15, (tsl::bannerVersionTextColor));
 
             if (edz::cheat::CheatManager::getProcessID() != 0) {
-                renderer->drawString("游戏ID:", false, 185 +14, 40 -6, 15, (tsl::style::color::ColorText));
+                renderer->drawString("程序ID:", false, 185 +14, 40 -6, 15, (tsl::style::color::ColorText));
                 renderer->drawString("构建ID:", false, 185 +14, 60 -6, 15, (tsl::style::color::ColorText));
                 renderer->drawString("进程ID:", false, 185 +14, 80 -6, 15, (tsl::style::color::ColorText));
                 renderer->drawString(GuiMain::s_runningTitleIDString.c_str(), false, 250 +14, 40 -6, 15, (tsl::style::color::ColorHighlight));
@@ -117,7 +117,7 @@ public:
             renderer->drawString("南宫镜 汉化", false, 20, 52+23, 15, (tsl::bannerVersionTextColor));
 
             if (edz::cheat::CheatManager::getProcessID() != 0) {
-                renderer->drawString("游戏ID:", false, 185 +14, 40 -6, 15, (tsl::style::color::ColorText));
+                renderer->drawString("程序ID:", false, 185 +14, 40 -6, 15, (tsl::style::color::ColorText));
                 renderer->drawString("构建ID:", false, 185 +14, 60 -6, 15, (tsl::style::color::ColorText));
                 renderer->drawString("进程ID:", false, 185 +14, 80 -6, 15, (tsl::style::color::ColorText));
                 renderer->drawString(GuiMain::s_runningTitleIDString.c_str(), false, 250 +14, 40 -6, 15, (tsl::style::color::ColorHighlight));
