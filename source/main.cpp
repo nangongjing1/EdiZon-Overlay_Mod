@@ -48,7 +48,7 @@ public:
     virtual tsl::elm::Element* createUI() {
         auto *rootFrame = new tsl::elm::HeaderOverlayFrame();
         rootFrame->setHeader(new tsl::elm::CustomDrawer([this](tsl::gfx::Renderer *renderer, s32 x, s32 y, s32 w, s32 h) {
-            renderer->drawString("EdiZon", false, 20, 50+2, 32, (tsl::defaultOverlayColor));
+            renderer->drawString("EdiZon", false, 20, 50, 32, (tsl::defaultOverlayColor));
             renderer->drawString(APP_VERSION, false, 20, 52+23, 15, (tsl::bannerVersionTextColor));
 
             if (edz::cheat::CheatManager::getProcessID() != 0) {
@@ -88,6 +88,7 @@ public:
         });
         list->addItem(statsItem);
 
+        //list->disableCaching();
         rootFrame->setContent(list);
         return rootFrame;
     }
@@ -109,12 +110,23 @@ public:
     }
     ~GuiCheats() { }
 
+
     virtual tsl::elm::Element* createUI() override {
         auto rootFrame = new tsl::elm::HeaderOverlayFrame(97);
 
-        rootFrame->setHeader(new tsl::elm::CustomDrawer([this](tsl::gfx::Renderer *renderer, s32 x, s32 y, s32 w, s32 h) {
-            renderer->drawString("EdiZon", false, 20, 50+2, 32, (tsl::defaultOverlayColor));
-            renderer->drawString("南宫镜 汉化", false, 20, 52+23, 15, (tsl::bannerVersionTextColor));
+        bool setOnce = true; // for ensuring header sync with frame caching for header overlayframe
+
+        rootFrame->setHeader(new tsl::elm::CustomDrawer([this, &setOnce](tsl::gfx::Renderer *renderer, s32 x, s32 y, s32 w, s32 h) {
+            renderer->drawString("EdiZon", false, 20, 50, 32, (tsl::defaultOverlayColor));
+
+            //static bool runOnce = true;
+            if (setOnce) {
+                renderer->drawString("南宫镜 汉化", false, 20, 52+23, 15, (tsl::bannerVersionTextColor));
+                setOnce = false;
+            } else {
+                renderer->drawString("南宫镜 汉化", false, 20, 52+23, 15, (tsl::bannerVersionTextColor));
+            }
+            
 
             if (edz::cheat::CheatManager::getProcessID() != 0) {
                 renderer->drawString("程序ID:", false, 185 +14, 40 -6, 15, (tsl::style::color::ColorText));
@@ -194,7 +206,7 @@ public:
                         replaceAll(cheatNameCheck, ":ENABLED", "");
 
                         auto cheatToggleItem = new tsl::elm::ToggleListItem(/*formatString("%d:%s: %s", cheat->getID(), (cheat->isEnabled() ? "y" : "n"),*/ cheatNameCheck/*.c_str()).c_str()*/, cheat->isEnabled());
-                        cheatToggleItem->setStateChangedListener([&cheat](bool state) { cheat->setState(state); });
+                        cheatToggleItem->setStateChangedListener([&cheat](bool state) { cheat->setState(state);});
 
                         this->m_cheatToggleItems.insert({cheat->getID(), cheatToggleItem});
                         list->addItem(cheatToggleItem);
@@ -215,6 +227,8 @@ public:
                     this->m_numCheats++;
                 }
             }
+
+            //list->disableCaching();
 
             // display if no cheats in submenu
             if(this->m_numCheats < 1){
