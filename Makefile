@@ -10,7 +10,7 @@ TOPDIR ?= $(CURDIR)
 include $(DEVKITPRO)/libnx/switch_rules
 
 APP_TITLE		:=	EdiZon
-APP_FILENAME	:=  ovlEdiZon
+APP_FILENAME	:=  EdiZon
 APP_AUTHOR		:=	WerWolv, proferabg, and ppkantorski
 APP_VERSION		:=	v1.0.14+
 
@@ -38,7 +38,7 @@ SPACE     	:=  $(null) $(null)
 
 ARCH	:=	-march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE
 
-CFLAGS	:= -g -Wall -O3 -ffunction-sections -fdata-sections -flto -ffast-math -fomit-frame-pointer \
+CFLAGS	:= -g -Wall -Os -ffunction-sections -fdata-sections -flto -ffast-math -fomit-frame-pointer \
 					-fuse-linker-plugin -finline-small-functions -fno-strict-aliasing -frename-registers -falign-functions=16 \
 					$(ARCH) $(DEFINES) -DVERSION_STRING=\"$(subst $(SPACE),\$(SPACE),${APP_VERSION})\"
 
@@ -49,9 +49,9 @@ CFLAGS	+=	-DAPP_VERSION=\"$(APP_VERSION)\" -DAPP_TITLE=\"$(APP_TITLE)\" -DAPP_AU
 CXXFLAGS	:= $(CFLAGS) -fexceptions -std=c++26
 
 ASFLAGS	:=	-g $(ARCH)
-LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
+LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map) -Wl,--gc-sections
 
-LIBS	:= -lnx
+LIBS	:= -lnx -Wl,--gc-sections
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -156,15 +156,14 @@ all: $(BUILD)
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@ $(BUILD) $(OUTDIR)
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
-	@rm -rf SdOut
-	@mkdir -p SdOut/switch/.overlays
-	@cp -rf $(OUTPUT).ovl SdOut/switch/.overlays/
-	@cd $(CURDIR)/SdOut; zip -r -q -9 $(APP_TITLE)-Overlay.zip switch; cd $(CURDIR)
+	@mkdir -p $(OUTDIR)/switch/.overlays
+	@cp -rf $(OUTPUT).ovl $(OUTDIR)/switch/.overlays/
+	@cd $(CURDIR)/$(OUTDIR); zip -r -q -9 $(APP_TITLE)-Overlay.zip switch; cd $(CURDIR)
 
 #---------------------------------------------------------------------------------
 clean:
-	@echo " RM   " $(BUILD) $(OUTDIR) SdOut
-	@rm -fr $(BUILD) $(OUTDIR) SdOut
+	@echo " RM   " $(BUILD) $(OUTDIR)
+	@rm -fr $(BUILD) $(OUTDIR)
 
 #---------------------------------------------------------------------------------
 install: all
