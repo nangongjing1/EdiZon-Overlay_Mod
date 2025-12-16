@@ -52,9 +52,9 @@ public:
             renderer->drawString(APP_VERSION, false, 20, 52+23, 15, (tsl::bannerVersionTextColor));
 
             if (edz::cheat::CheatManager::getProcessID() != 0) {
-                renderer->drawString("程序ID:", false, 185 +14, 40 -6, 15, (tsl::style::color::ColorText));
-                renderer->drawString("构建ID:", false, 185 +14, 60 -6, 15, (tsl::style::color::ColorText));
-                renderer->drawString("进程ID:", false, 185 +14, 80 -6, 15, (tsl::style::color::ColorText));
+                renderer->drawString("程序ID:", false, 190 +14, 40 -6, 15, (tsl::style::color::ColorText));
+                renderer->drawString("构建ID:", false, 190 +14, 60 -6, 15, (tsl::style::color::ColorText));
+                renderer->drawString("进程ID:", false, 190 +14, 80 -6, 15, (tsl::style::color::ColorText));
                 renderer->drawString(GuiMain::s_runningTitleIDString.c_str(), false, 250 +14, 40 -6, 15, (tsl::style::color::ColorHighlight));
                 renderer->drawString(GuiMain::s_runningBuildIDString.c_str(), false, 250 +14, 60 -6, 15, (tsl::style::color::ColorHighlight));
                 renderer->drawString(GuiMain::s_runningProcessIDString.c_str(), false, 250 +14, 80 -6, 15, (tsl::style::color::ColorHighlight));
@@ -74,7 +74,7 @@ public:
             });
             list->addItem(cheatsItem);
         } else {
-            auto noDmntSvc = new tsl::elm::ListItem("未加载金手指");
+            auto noDmntSvc = new tsl::elm::ListItem("未加载金手指!");
             list->addItem(noDmntSvc);
         }
 
@@ -112,6 +112,7 @@ public:
 
     virtual tsl::elm::Element* createUI() override {
         auto rootFrame = new tsl::elm::HeaderOverlayFrame(97);
+        // bool setOnce = true; // for ensuring header sync with frame caching for header overlayframe
         
         rootFrame->setHeader(new tsl::elm::CustomDrawer([this](tsl::gfx::Renderer *renderer, s32 x, s32 y, s32 w, s32 h) {
             renderer->drawString(APP_TITLE, false, 20, 50, 32, (tsl::defaultOverlayColor));
@@ -119,23 +120,26 @@ public:
             
 
             if (edz::cheat::CheatManager::getProcessID() != 0) {
-                renderer->drawString("程序ID:", false, 185 +14, 40 -6, 15, (tsl::style::color::ColorText));
-                renderer->drawString("构建ID:", false, 185 +14, 60 -6, 15, (tsl::style::color::ColorText));
-                renderer->drawString("进程ID:", false, 185 +14, 80 -6, 15, (tsl::style::color::ColorText));
+                renderer->drawString("程序ID:", false, 190 +14, 40 -6, 15, (tsl::style::color::ColorText));
+                renderer->drawString("构建ID:", false, 190 +14, 60 -6, 15, (tsl::style::color::ColorText));
+                renderer->drawString("进程ID:", false, 190 +14, 80 -6, 15, (tsl::style::color::ColorText));
                 renderer->drawString(GuiMain::s_runningTitleIDString.c_str(), false, 250 +14, 40 -6, 15, (tsl::style::color::ColorHighlight));
                 renderer->drawString(GuiMain::s_runningBuildIDString.c_str(), false, 250 +14, 60 -6, 15, (tsl::style::color::ColorHighlight));
                 renderer->drawString(GuiMain::s_runningProcessIDString.c_str(), false, 250 +14, 80 -6, 15, (tsl::style::color::ColorHighlight));
             }
         }));
 
-        if (edz::cheat::CheatManager::getCheats().size() == 0) {
+            if (edz::cheat::CheatManager::getCheats().size() == 0) {
             auto warning = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, u16 x, u16 y, u16 w, u16 h){
-                renderer->drawString("\uE150", false, 180, 274, 90, (0xFFFF));
+                static const auto iconWidth = renderer->getTextDimensions("\uE150", false, 90).first;
+                static const auto textWidth1 = renderer->getTextDimensions("检测到版本不匹配的金手指", false, 25).first;
+                static const auto textWidth2 = renderer->getTextDimensions("未加载金手指!", false, 25).first;
+                renderer->drawString("\uE150", false, (tsl::cfg::FramebufferWidth - iconWidth) / 2, 274, 90, (0xFFFF));
                 // 查找其他txt
                 if (edz::cheat::CheatManager::hasCheatFilesInFolder()) {
-                    renderer->drawString("检测到版本不匹配的金手指", false, 75, 360, 25, (0xFFFF));
+                    renderer->drawString("检测到版本不匹配的金手指", false, (tsl::cfg::FramebufferWidth - textWidth1) / 2, 360, 25, (0xFFFF));
                 } else {
-                    renderer->drawString("未检测到金手指文件!", false, 108, 360, 25, (0xFFFF));
+                    renderer->drawString("未加载金手指!", false, (tsl::cfg::FramebufferWidth - textWidth2) / 2, 360, 25, (0xFFFF));
                 }
             });
 
@@ -196,7 +200,7 @@ public:
                         replaceAll(cheatNameCheck, ":ENABLED", "");
 
                         auto cheatToggleItem = new tsl::elm::ToggleListItem(/*formatString("%d:%s: %s", cheat->getID(), (cheat->isEnabled() ? "y" : "n"),*/ cheatNameCheck/*.c_str()).c_str()*/, cheat->isEnabled());
-                        cheatToggleItem->setStateChangedListener([&cheat](bool state) { cheat->setState(state); });
+                        cheatToggleItem->setStateChangedListener([&cheat](bool state) { cheat->setState(state);});
 
                         this->m_cheatToggleItems.insert({cheat->getID(), cheatToggleItem});
                         list->addItem(cheatToggleItem);
@@ -223,8 +227,10 @@ public:
             // display if no cheats in submenu
             if(this->m_numCheats < 1){
                 auto warning = new tsl::elm::CustomDrawer([](tsl::gfx::Renderer *renderer, u16 x, u16 y, u16 w, u16 h){
-                    renderer->drawString("\uE150", false, 180, 250, 90, (0xFFFF));
-                    renderer->drawString("条目中没有金手指", false, 130, 340, 25, (0xFFFF));
+                    static const auto iconWidth = renderer->getTextDimensions("\uE150", false, 90).first;
+                    static const auto textWidth = renderer->getTextDimensions("条目中没有金手指!", false, 25).first;
+                    renderer->drawString("\uE150", false, (tsl::cfg::FramebufferWidth - iconWidth) / 2, 250, 90, (0xFFFF));
+                    renderer->drawString("条目中没有金手指!", false, (tsl::cfg::FramebufferWidth - textWidth) / 2, 340, 25, (0xFFFF));
                 });
 
                 rootFrame->setContent(warning);
