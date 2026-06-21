@@ -12,7 +12,7 @@ include $(DEVKITPRO)/libnx/switch_rules
 APP_TITLE		:=	EdiZon
 APP_FILENAME	:=  EdiZon
 APP_AUTHOR		:=	WerWolv, proferabg, ppkantorski, and GSNG
-APP_VERSION		:=	1.1.0
+APP_VERSION		:=	1.1.1
 
 ifeq ($(RELEASE), 1)
 	APP_VERSION	:=	$(APP_VERSION)-$(shell git describe --always)
